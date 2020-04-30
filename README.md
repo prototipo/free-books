@@ -42,3 +42,5 @@ python free-books.py -d s301
 ```
 
 If the index starts with an *s*, then the books comes from the Springer library. Elsevier downloads still not implemented *Coming soon*.
+
+Also, patata.
