@@ -7,6 +7,7 @@ import argparse
 import pandas as pd
 import urllib3 as urllib
 from bs4 import BeautifulSoup
+from selenium import webdriver
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='\
@@ -25,12 +26,12 @@ available for free because of the COVID-19 pandemia.\
 
 def search(args):
     print('Searching for books that match the regular expression...')
-    data_elsevier = pd.read_csv('elsevier-books.csv', sep=';')
+    data_elsevier = pd.read_csv('elsevier-books.csv', sep=';', encoding='utf-8')
     df_elsevier = data_elsevier[data_elsevier['Book Title'].str.match(r'{}'.format(args))]
     if len(df_elsevier):
         print('\n* Elsevier matches:\n')
         print(df_elsevier[['Book Title', 'Year', 'Imprint']])
-    data_springer = pd.read_csv('springer-books.csv', sep=';')
+    data_springer = pd.read_csv('springer-books.csv', sep=';', encoding='utf-8')
     df_springer = data_springer[data_springer['Book Title'].str.match(r'{}'.format(args))]
     if len(df_springer):
         print('\n* Springer matches:\n')
@@ -74,7 +75,6 @@ def download_springer(index):
     pass
 
 def download_elsevier(index):
-    data_elsevier = pd.read_csv('elsevier-books.csv', sep=';')
     pass
 
 if __name__ == '__main__':
