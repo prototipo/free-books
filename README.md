@@ -38,9 +38,12 @@ Searching for books that match the regular expression...
 Once we know the index of the book we want to download, we only have to use the instruction as follows:
 
 ```shell
-python free-books.py -d s301
+python free-books.py -d s301 e11
 ```
 
-If the index starts with an *s*, then the books comes from the Springer library. Elsevier downloads still not implemented *Coming soon*.
+If the index starts with an *s*, then the books comes from the Springer library.
+If the index starts with an *e*, then the books comes from the Elsevier library.
+
+It downloads all the files to the `output/` folder
 
 Also, patata.

@@ -43,11 +43,9 @@ def download(args):
         pass
     for index in args:
         if index.startswith('s'):
-            print('Springer book')
             index = int(index[1:])
             download_springer(index)
         elif index.startswith('e'):
-            print('Elsevier book')
             index = int(index[1:])
             download_elsevier(index)
 
