@@ -1,13 +1,12 @@
 #!/usr/bin/python
 # -*- encoding: utf-8 -*-
 
-import sys
+import sys, os
 import re
 import argparse
 import pandas as pd
 import urllib3 as urllib
 from bs4 import BeautifulSoup
-from selenium import webdriver
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='\
@@ -38,6 +37,10 @@ def search(args):
         print(df_springer[['Book Title', 'Copyright Year', 'Author']])
 
 def download(args):
+    try:
+        os.mkdir('output')
+    except:
+        pass
     for index in args:
         if index.startswith('s'):
             print('Springer book')
@@ -52,17 +55,20 @@ def download_springer(index):
     data_springer = pd.read_csv('springer-books.csv', sep=';')
     if index < len(data_springer):
         book = data_springer.loc[index]
-        print('Downloading {}...'.format(book['Book Title']))
+        print('Downloading {}'.format(book['Book Title']), end='', flush=True)
         url = book['OpenURL']
         http = urllib.PoolManager()
         response = http.request('GET', url)
+        print('.', end='', flush=True)
         html = BeautifulSoup(response.data, features='html.parser')
         div_book = html.findAll('a', {'class' : 'test-bookpdf-link'})[0]
         url_book = div_book['href']
+        print('.', end='', flush=True)
         url_book = 'https://link.springer.com' + url_book
-        filename = '{}.pdf'.format(book['Book Title'])
+        filename = 'output/{}.pdf'.format(book['Book Title'])
         response.release_conn()
         r = http.request('GET', url_book, preload_content=False)
+        print('.', end='', flush=True)
         with open(filename, 'wb') as out:
             while True:
                 data = r.read()
@@ -70,12 +76,47 @@ def download_springer(index):
                     break
                 out.write(data)
         r.release_conn()
+        print(' Complete!')
     else:
         print('Not found')
     pass
 
 def download_elsevier(index):
-    pass
+    data_elsevier = pd.read_csv('elsevier-books.csv', sep=';')
+    if index < len(data_elsevier):
+        book = data_elsevier.loc[index]
+        print('Downloading {}'.format(book['Book Title']), end='', flush=True)
+        url = book['URL']
+        url = url.split('=')[1]
+        http = urllib.PoolManager()
+        response = http.request('GET', url)
+        print('.', end='', flush=True)
+        html = str(response.data, 'utf-8')
+        div_books = re.findall('piiList\":\[(.*?)\]', html)[0]
+        div_books = div_books.split(',')
+        print('.', end='', flush=True)
+        div_books = [x[1:len(x)-1] for x in div_books]
+        response.release_conn()
+        for j in range(len(div_books)):
+            print('.', end='', flush=True)
+            url_chapter = 'https://www.sciencedirect.com/science/article/pii/' \
+                + div_books[j]
+            r = http.request('GET', url_chapter)
+            html = BeautifulSoup(r.data, features='html.parser')
+            url_chapter = 'https://www.sciencedirect.com/science/article/pii/' \
+                + div_books[j] + '/pdfft?isDTMRedir=true&download=true'
+            filename = 'output/' + book['Book Title'] + ' - Chapter ' + str(j) + '.pdf'
+            html = str(response.data, 'utf-8')
+            r = http.request('GET', url_chapter, preload_content=False)
+            with open(filename, 'wb') as out:
+                while True:
+                    data = r.read()
+                    if not data:
+                        break
+                    out.write(data)
+            r.release_conn()
+    else:
+        print('Not found')
 
 if __name__ == '__main__':
     args = parse_arguments()
