@@ -44,6 +44,7 @@ python free-books.py -d s301 e11
 
 If the index starts with an *s*, then the books comes from the Springer library.
 If the index starts with an *e*, then the books comes from the Elsevier library.
+As Elsevier has a strong security system, instead of downloading the book, the system will print the URL to the book.
 
 It downloads all the files to the `output/` folder
 
