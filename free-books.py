@@ -88,7 +88,8 @@ def download_elsevier(index):
     if index < len(data_elsevier):
         book = data_elsevier.loc[index]
         url = book['URL']
-        print('The URL is', url)
+        title = book['Book Title']
+        print('The URL of the book', title, 'is', url)
     else:
         print('Not found')
 
