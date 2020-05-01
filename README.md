@@ -6,7 +6,6 @@ Python 3 is needed. Installation is as easy as downloading the script and having
 * pandas
 * urllib3
 * beautifulsoup4
-* PyPDF2
 
 The script has fundamentally two uses:
 

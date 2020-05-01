@@ -2,16 +2,8 @@
 # -*- encoding: utf-8 -*-
 
 import sys, os
-import requests
-import browser_cookie3
-from os import listdir
-from os.path import isfile, join
-from http.cookiejar import Cookie, CookieJar
-import re
 import argparse
 import shutil
-import sqlite3
-from PyPDF2 import PdfFileMerger
 import pandas as pd
 import urllib3 as urllib
 from bs4 import BeautifulSoup
